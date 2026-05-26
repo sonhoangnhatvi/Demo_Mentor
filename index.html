@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tư duy bóc tách Layout - Giảng viên: Hoàng Nhật Sơn</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Smooth transition cho các tab */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Custom scrollbar cho code block */
+        pre::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        pre::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+
+        pre::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col">
+
+    <!-- Navbar của trang học liệu -->
+    <nav class="bg-blue-900 text-white p-4 shadow-md">
+        <div class="max-w-5xl mx-auto flex justify-between items-center">
+            <div class="font-bold text-xl flex items-center gap-2">
+                <i class="fa-solid fa-chalkboard-user"></i>
+                Funix Web - Bài giảng Interactive
+            </div>
+            <div class="text-sm font-light text-blue-200">
+                Giảng viên: <span class="font-medium text-white">Hoàng Nhật Sơn</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Nội dung chính -->
+    <main class="flex-grow max-w-5xl mx-auto w-full p-6 mt-4">
+
+        <div class="mb-8 text-center">
+            <h1 class="text-3xl font-bold text-slate-800 mb-3">Case Study: Nỗi ngợp trước giao diện</h1>
+            <p class="text-slate-600 max-w-2xl mx-auto">
+                Mô phỏng quá trình chuyển đổi từ góc nhìn "Thị giác" (bị ngợp bởi màu sắc, chi tiết) sang góc nhìn "Cấu
+                trúc" (bóc tách Box Model) để dựng khung HTML.
+            </p>
+        </div>
+
+        <!-- Bảng điều khiển (Tabs) -->
+        <div class="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden">
+
+            <div class="flex flex-col sm:flex-row border-b border-slate-200 bg-slate-100">
+                <button onclick="switchTab('tab1')" id="btn-tab1"
+                    class="tab-btn flex-1 py-4 px-6 text-center font-semibold text-slate-500 hover:bg-white hover:text-blue-600 transition-colors border-b-2 border-transparent focus:outline-none active-tab">
+                    <span class="block text-xs uppercase tracking-wider mb-1">Góc nhìn Học viên</span>
+                    1. Giao diện hoàn thiện
+                </button>
+                <button onclick="switchTab('tab2')" id="btn-tab2"
+                    class="tab-btn flex-1 py-4 px-6 text-center font-semibold text-slate-500 hover:bg-white hover:text-blue-600 transition-colors border-b-2 border-transparent focus:outline-none">
+                    <span class="block text-xs uppercase tracking-wider mb-1">Góc nhìn Giảng viên</span>
+                    2. Bóc tách Cấu trúc
+                </button>
+                <button onclick="switchTab('tab3')" id="btn-tab3"
+                    class="tab-btn flex-1 py-4 px-6 text-center font-semibold text-slate-500 hover:bg-white hover:text-blue-600 transition-colors border-b-2 border-transparent focus:outline-none">
+                    <span class="block text-xs uppercase tracking-wider mb-1">Kết quả</span>
+                    3. Khung chuẩn & Flexbox
+                </button>
+            </div>
+
+            <div class="p-8 bg-white min-h-[400px]">
+
+                <!-- TAB 1: GIAO DIỆN HOÀN THIỆN (BỊ NGỢP) -->
+                <div id="tab1" class="tab-content active">
+                    <div
+                        class="mb-6 flex items-start gap-4 p-4 bg-orange-50 text-orange-900 border-l-4 border-orange-500 rounded-r shadow-sm">
+                        <i class="fa-solid fa-face-dizzy text-2xl mt-1 text-orange-500"></i>
+                        <div>
+                            <h3 class="font-bold text-lg mb-1">Góc nhìn thường gặp: Bị cuốn vào chi tiết (Bề mặt)</h3>
+                            <p class="text-sm leading-relaxed mb-3">
+                                Khi nhận một bản thiết kế, các bạn mới học rất dễ bị "choáng ngợp" bởi quá nhiều chi
+                                tiết: từ màu nền, icon, cho đến các góc bo tròn... Thói quen tự nhiên là vừa gõ 1 thẻ
+                                HTML đã vội vã chuyển sang file CSS để chỉnh màu, ép vị trí cho giống hệt hình mẫu.
+                            </p>
+                            <div class="p-3 bg-white/70 rounded border border-orange-200">
+                                <span class="font-semibold text-red-600"><i class="fa-solid fa-bug mr-1"></i> Bất cập
+                                    của thói quen này:</span>
+                                <p class="text-sm mt-1">Vì bỏ qua việc xây dựng bộ khung, các thẻ HTML sẽ nằm lộn xộn.
+                                    Các bạn buộc phải lạm dụng <code>margin âm</code>, <code>position: absolute</code>
+                                    hay <code>float</code> để "chắp vá". Kết quả là code cực kỳ rối rắm, và giao diện
+                                    trông sẽ "méo mó" thế này đây:</p>
+
+                                <!-- Đoạn code rối loạn -->
+                                <div class="mt-3 bg-[#1e293b] rounded shadow-inner overflow-hidden">
+                                    <div
+                                        class="bg-slate-800 text-slate-400 px-3 py-1.5 text-[11px] font-mono border-b border-slate-700">
+                                        HTML (Thiếu các thẻ &lt;div&gt; gom nhóm)</div>
+                                    <pre class="p-3 text-xs font-mono text-slate-300 overflow-x-auto">
+<span class="text-blue-400">&lt;img</span> <span class="text-sky-300">class=</span><span class="text-green-300">"logo"</span> <span class="text-sky-300">src=</span><span class="text-green-300">"logo.png"</span><span class="text-blue-400">&gt;</span>
+<span class="text-blue-400">&lt;input</span> <span class="text-sky-300">class=</span><span class="text-green-300">"search-box"</span> <span class="text-sky-300">placeholder=</span><span class="text-green-300">"Tìm kiếm..."</span><span class="text-blue-400">&gt;</span>
+<span class="text-blue-400">&lt;button</span> <span class="text-sky-300">class=</span><span class="text-green-300">"btn-search"</span><span class="text-blue-400">&gt;</span>Tìm<span class="text-blue-400">&lt;/button&gt;</span>
+<span class="text-blue-400">&lt;div</span> <span class="text-sky-300">class=</span><span class="text-green-300">"cart"</span><span class="text-blue-400">&gt;</span>Giỏ hàng<span class="text-blue-400">&lt;/div&gt;</span>
+<span class="text-blue-400">&lt;span</span> <span class="text-sky-300">class=</span><span class="text-green-300">"badge-so-3"</span><span class="text-blue-400">&gt;</span>3<span class="text-blue-400">&lt;/span&gt;</span>
+<span class="text-blue-400">&lt;div</span> <span class="text-sky-300">class=</span><span class="text-green-300">"user"</span><span class="text-blue-400">&gt;</span>Nhật Sơn<span class="text-blue-400">&lt;/div&gt;</span>
+</pre>
+                                    <div
+                                        class="bg-slate-800 text-slate-400 px-3 py-1.5 text-[11px] font-mono border-b border-t border-slate-700">
+                                        CSS (Hậu quả: Phải dùng float, absolute để kéo vị trí)</div>
+                                    <pre class="p-3 text-xs font-mono text-slate-300 overflow-x-auto">
+<span class="text-yellow-300">.logo</span> { <span class="text-sky-300">float</span>: left; <span class="text-sky-300">margin-top</span>: 25px; }
+<span class="text-yellow-300">.search-box</span> { <span class="text-sky-300">position</span>: absolute; <span class="text-sky-300">left</span>: 150px; <span class="text-sky-300">top</span>: 20px; }
+<span class="text-yellow-300">.btn-search</span> { <span class="text-sky-300">margin-left</span>: -5px; } <span class="text-slate-500">/* Cố ép dính vào input */</span>
+<span class="text-yellow-300">.cart</span> { <span class="text-sky-300">float</span>: right; <span class="text-sky-300">margin-right</span>: 50px; }
+<span class="text-yellow-300">.badge-so-3</span> { <span class="text-sky-300">position</span>: absolute; <span class="text-sky-300">right</span>: -20px; } <span class="text-slate-500">/* Bay lơ lửng */</span>
+</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Giao diện Header giả lập (CỐ TÌNH LÀM VỠ) -->
+                    <div class="bg-orange-550 border border-slate-200 rounded-lg shadow-sm overflow-hidden h-[120px] relative"
+                        style="background-color: #f53d2d;">
+
+                        <!-- Logo bị lệch -->
+                        <div class="text-white text-3xl font-bold tracking-tighter absolute left-4 top-8">
+                            <i class="fa-solid fa-bag-shopping"></i> E-Shop
+                        </div>
+
+                        <!-- Search nhập nhằng, nút bấm đè lên ô input -->
+                        <div class="absolute left-[140px] top-4 md:left-[180px]">
+                            <input type="text" placeholder="Tìm kiếm sản phẩm..."
+                                class="w-[220px] md:w-[350px] px-4 py-3 text-sm text-slate-700 outline-none rounded shadow-inner">
+                            <button
+                                class="bg-orange-600 text-white px-5 py-2 absolute left-[200px] md:left-[330px] top-[5px] border-2 border-white shadow-lg">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </button>
+                        </div>
+
+                        <!-- Actions lộn xộn, rớt dòng -->
+                        <div class="absolute right-4 top-4 text-white text-sm">
+                            <div class="inline-block mr-2 opacity-80">
+                                <i class="fa-regular fa-bell text-lg"></i> TB
+                            </div>
+                            <div class="inline-block mr-6 relative">
+                                <i class="fa-solid fa-cart-shopping text-3xl"></i>
+                                <!-- Số 3 bay lơ lửng -->
+                                <span
+                                    class="absolute -top-3 -right-5 bg-white text-orange-600 text-[10px] font-bold px-1.5 py-0.5 rounded-full">3</span>
+                            </div>
+                            <!-- Tài khoản rớt hẳn xuống dòng dưới do float -->
+                            <div class="block mt-4 ml-6 opacity-90 border-t border-orange-400 pt-1">
+                                <i class="fa-solid fa-user"></i> Nhật Sơn
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 2: BÓC TÁCH CẤU TRÚC -->
+                <div id="tab2" class="tab-content">
+                    <div
+                        class="mb-6 flex items-start gap-4 p-4 bg-blue-50 text-blue-900 border-l-4 border-blue-500 rounded-r shadow-sm">
+                        <i class="fa-solid fa-lightbulb text-2xl mt-1 text-blue-500"></i>
+                        <div>
+                            <h3 class="font-bold text-lg mb-1">Lời khuyên từ Mentor: Đeo "kính X-quang" để nhìn cấu trúc
+                            </h3>
+                            <p class="text-sm leading-relaxed">
+                                "Khoan vội lo lắng về màu sắc hay CSS nhé. Các bạn hãy tập thói quen nhìn mọi thứ trên
+                                giao diện như những <strong>'chiếc hộp' (Box Model)</strong>. <br>Ví dụ ở Header này, nó
+                                đơn giản chỉ là 1 hộp lớn bên ngoài, chứa 3 hộp con nằm ngang bên trong: <em>Hộp Logo,
+                                    Hộp Tìm kiếm và Hộp Chức năng</em>. Mình cứ gom nhóm và chia hộp chuẩn xác đã, việc
+                                trang trí tính sau!"
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Giao diện Wireframe -->
+                    <div class="border-4 border-dashed border-blue-400 bg-blue-50/50 p-6 pt-8 relative rounded">
+                        <span
+                            class="absolute top-0 left-0 bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-br z-10">
+                            &lt;header&gt; (Container chính)
+                        </span>
+
+                        <div class="flex flex-col md:flex-row gap-4 items-stretch">
+                            <!-- Khối 1 -->
+                            <div
+                                class="border-2 border-solid border-red-400 bg-red-50 p-4 pt-8 relative flex-shrink-0 flex items-center justify-center min-w-[120px]">
+                                <span
+                                    class="absolute top-0 left-0 bg-red-400 text-white text-xs font-bold px-2 py-0.5 rounded-br">Khối
+                                    1: Logo</span>
+                                <span class="text-red-500 font-mono text-sm">[Hình ảnh Logo]</span>
+                            </div>
+
+                            <!-- Khối 2 -->
+                            <div
+                                class="border-2 border-solid border-green-400 bg-green-50 p-4 pt-8 relative flex-1 flex flex-col md:flex-row gap-2 items-center justify-center">
+                                <span
+                                    class="absolute top-0 left-0 bg-green-500 text-white text-xs font-bold px-2 py-0.5 rounded-br">Khối
+                                    2: Tìm kiếm</span>
+                                <div
+                                    class="border border-green-300 bg-white w-full py-2 px-3 text-center text-green-600 text-sm font-mono">
+                                    [Ô nhập (Input)]</div>
+                                <div
+                                    class="border border-green-300 bg-white py-2 px-4 text-center text-green-600 text-sm font-mono whitespace-nowrap">
+                                    [Nút (Button)]</div>
+                            </div>
+
+                            <!-- Khối 3 -->
+                            <div
+                                class="border-2 border-solid border-purple-400 bg-purple-50 p-4 pt-8 relative flex-shrink-0 flex gap-4 items-center justify-center">
+                                <span
+                                    class="absolute top-0 left-0 bg-purple-500 text-white text-xs font-bold px-2 py-0.5 rounded-br">Khối
+                                    3: Actions</span>
+                                <span class="text-purple-600 font-mono text-sm">[Thông báo]</span>
+                                <span class="text-purple-600 font-mono text-sm">[Giỏ hàng]</span>
+                                <span class="text-purple-600 font-mono text-sm">[Tài khoản]</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 3: LÊN KHUNG HTML & CSS HOÀN THIỆN -->
+                <div id="tab3" class="tab-content">
+                    <div
+                        class="mb-6 flex items-start gap-4 p-4 bg-green-50 text-green-900 border-l-4 border-green-500 rounded-r shadow-sm">
+                        <i class="fa-solid fa-wand-magic-sparkles text-2xl mt-1 text-green-500"></i>
+                        <div>
+                            <h3 class="font-bold text-lg mb-1">Thành quả: Khung vững chãi, CSS cực kỳ nhẹ nhàng</h3>
+                            <p class="text-sm leading-relaxed">Khi đã có bộ khung HTML chuẩn (được gom nhóm rõ ràng bằng
+                                các thẻ <code>&lt;div&gt;</code>), việc viết CSS trở thành "trò trẻ con". Thay vì chắp
+                                vá vất vả như Tab 1, chúng ta chỉ cần dùng <strong>Flexbox</strong> (dàn hàng) là mọi
+                                thứ sẽ vào hàng lối một cách hoàn hảo và tự động co giãn (responsive).</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+                        <!-- Code HTML -->
+                        <div class="bg-[#1e293b] rounded-lg shadow-inner overflow-hidden flex flex-col">
+                            <div
+                                class="bg-slate-800 text-slate-400 px-3 py-2 text-[11px] font-mono border-b border-slate-700 font-semibold">
+                                HTML (Gom nhóm thành 3 khối lớn)</div>
+                            <pre class="p-3 text-[12px] font-mono text-slate-300 overflow-x-auto flex-1">
+<span class="text-blue-400">&lt;header</span> <span class="text-sky-300">class=</span><span class="text-green-300">"main-header"</span><span class="text-blue-400">&gt;</span>
+    
+    <span class="text-slate-500">&lt;!-- Khối 1: Logo --&gt;</span>
+    <span class="text-blue-400">&lt;div</span> <span class="text-sky-300">class=</span><span class="text-green-300">"logo-box"</span><span class="text-blue-400">&gt;</span>
+        <span class="text-blue-400">&lt;img</span> <span class="text-sky-300">src=</span><span class="text-green-300">"logo.png"</span><span class="text-blue-400">&gt;</span>
+    <span class="text-blue-400">&lt;/div&gt;</span>
+
+    <span class="text-slate-500">&lt;!-- Khối 2: Tìm kiếm --&gt;</span>
+    <span class="text-blue-400">&lt;div</span> <span class="text-sky-300">class=</span><span class="text-green-300">"search-box"</span><span class="text-blue-400">&gt;</span>
+        <span class="text-blue-400">&lt;input</span> <span class="text-sky-300">type=</span><span class="text-green-300">"text"</span><span class="text-blue-400">&gt;</span>
+        <span class="text-blue-400">&lt;button&gt;</span>Tìm<span class="text-blue-400">&lt;/button&gt;</span>
+    <span class="text-blue-400">&lt;/div&gt;</span>
+
+    <span class="text-slate-500">&lt;!-- Khối 3: Actions --&gt;</span>
+    <span class="text-blue-400">&lt;div</span> <span class="text-sky-300">class=</span><span class="text-green-300">"actions-box"</span><span class="text-blue-400">&gt;</span>
+        ...
+    <span class="text-blue-400">&lt;/div&gt;</span>
+
+<span class="text-blue-400">&lt;/header&gt;</span>
+</pre>
+                        </div>
+
+                        <!-- Code CSS -->
+                        <div class="bg-[#1e293b] rounded-lg shadow-inner overflow-hidden flex flex-col">
+                            <div
+                                class="bg-slate-800 text-slate-400 px-3 py-2 text-[11px] font-mono border-b border-slate-700 font-semibold">
+                                CSS (Chỉ cần dùng Flexbox)</div>
+                            <pre class="p-3 text-[12px] font-mono text-slate-300 overflow-x-auto flex-1">
+<span class="text-yellow-300">.main-header</span> {
+    <span class="text-sky-300">display</span>: flex;
+    <span class="text-sky-300">justify-content</span>: space-between;
+    <span class="text-sky-300">align-items</span>: center;
+}
+
+<span class="text-yellow-300">.search-box</span> {
+    <span class="text-sky-300">display</span>: flex;
+    <span class="text-sky-300">flex</span>: 1; <span class="text-slate-500">/* Tự giãn chiếm hết chỗ trống */</span>
+    <span class="text-sky-300">margin</span>: 0 40px;
+}
+
+<span class="text-yellow-300">.actions-box</span> {
+    <span class="text-sky-300">display</span>: flex;
+    <span class="text-sky-300">gap</span>: 20px; <span class="text-slate-500">/* Cách đều tự động */</span>
+}
+</pre>
+                        </div>
+                    </div>
+
+                    <!-- Giao diện Header chuẩn (Hoàn hảo) -->
+                    <div class="bg-slate-100 rounded-lg border border-slate-200 pb-2">
+                        <div
+                            class="text-xs font-mono text-slate-500 py-3 text-center border-b border-slate-200 mb-3 bg-white rounded-t-lg">
+                            <i class="fa-solid fa-desktop mr-1"></i> Giao diện khi Render thực tế (Mượt mà, không vỡ)
+                        </div>
+
+                        <div class="bg-orange-550 rounded shadow-md overflow-hidden mx-2 md:mx-6"
+                            style="background-color: #f53d2d;">
+                            <div class="flex items-center justify-between p-4 px-6 gap-6">
+                                <!-- Logo -->
+                                <div
+                                    class="text-white text-3xl font-bold tracking-tighter flex items-center gap-2 flex-shrink-0">
+                                    <i class="fa-solid fa-bag-shopping"></i> E-Shop
+                                </div>
+                                <!-- Search -->
+                                <div class="flex-1 max-w-2xl flex shadow-sm">
+                                    <input type="text" placeholder="Tìm kiếm sản phẩm, thương hiệu..."
+                                        class="w-full px-4 py-2.5 text-sm text-slate-700 outline-none rounded-l-sm">
+                                    <button
+                                        class="bg-orange-600 hover:bg-orange-700 text-white px-6 py-2.5 rounded-r-sm transition border-l border-orange-500">
+                                        <i class="fa-solid fa-magnifying-glass"></i>
+                                    </button>
+                                </div>
+                                <!-- Actions -->
+                                <div class="flex items-center gap-6 text-white text-sm flex-shrink-0">
+                                    <div
+                                        class="flex items-center gap-2 cursor-pointer hover:text-orange-200 transition">
+                                        <i class="fa-regular fa-bell text-lg"></i>
+                                        <span class="hidden md:inline">Thông báo</span>
+                                    </div>
+                                    <div
+                                        class="relative cursor-pointer hover:text-orange-200 transition flex items-center">
+                                        <i class="fa-solid fa-cart-shopping text-2xl"></i>
+                                        <span
+                                            class="absolute -top-1.5 -right-2.5 bg-white text-orange-600 text-xs font-bold px-1.5 py-0.5 rounded-full border border-orange-500 leading-none">3</span>
+                                    </div>
+                                    <div
+                                        class="flex items-center gap-2 cursor-pointer hover:text-orange-200 transition ml-2">
+                                        <div
+                                            class="w-7 h-7 rounded-full bg-orange-300 flex items-center justify-center border border-white">
+                                            <i class="fa-solid fa-user text-xs"></i>
+                                        </div>
+                                        <span class="font-medium hidden sm:inline">Nhật Sơn</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="mt-8 text-center text-slate-500 text-sm">
+            <p>Demo được thiết kế dành riêng cho bài giảng Web Front-end của Mentor Hoàng Nhật Sơn.</p>
+        </div>
+    </main>
+
+    <!-- Javascript xử lý chuyển Tab -->
+    <script>
+        function switchTab(tabId) {
+            // Ẩn tất cả nội dung tab
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Xóa style active ở tất cả các nút
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('text-blue-600', 'bg-white', 'border-blue-600');
+                btn.classList.add('text-slate-500');
+            });
+
+            // Hiển thị tab được chọn
+            document.getElementById(tabId).classList.add('active');
+
+            // Highlight nút được chọn
+            const activeBtn = document.getElementById('btn-' + tabId);
+            activeBtn.classList.remove('text-slate-500');
+            activeBtn.classList.add('text-blue-600', 'bg-white', 'border-blue-600');
+        }
+
+        // Khởi tạo tab 1 mặc định
+        document.addEventListener('DOMContentLoaded', () => {
+            switchTab('tab1');
+        });
+    </script>
+</body>
+
+</html>
